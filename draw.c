@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "ml6.h"
 #include "display.h"
 #include "draw.h"
 #include "matrix.h"
+
 
 /*======== void add_circle() ==========
   Inputs:   struct matrix * points
@@ -19,6 +21,19 @@
 void add_circle( struct matrix * points,
                  double cx, double cy, double cz,
                  double r, double step ) {
+
+  double t = 0;
+  double x0, y0, x1, y1;
+
+  while (t < 1) {
+    x0 = cx + r * cos(2 * M_PI * t);
+    y0 = cy + r * sin(2 * M_PI * t);
+    x1 = cx + r * cos(2 * M_PI * (t + step));
+    y1 = cy + r * sin(2 * M_PI * (t + step));
+    add_edge(points, x0, y0, cz, x1, y1, cz);
+    t += step;
+  }
+  
 }
 
 /*======== void add_curve() ==========
@@ -45,12 +60,27 @@ void add_curve( struct matrix *points,
                 double x2, double y2, 
                 double x3, double y3, 
                 double step, int type ) {
-  if (type) {
-
-  } else {
-    
-  }
   
+  struct matrix * x_coefs = generate_curve_coefs(x0, x1, x2, x3, type);
+  struct matrix * y_coefs = generate_curve_coefs(y0, y1, y2, y3, type);
+
+  double t = 0, x = x0, y = y0;
+  double nextX, nextY;
+
+  while (t < 1) {
+    nextX = x_coefs->m[0][0]*pow(t, 3) +
+      x_coefs->m[1][0]*pow(t, 2) +
+      x_coefs->m[2][0]*t +
+      x_coefs->m[3][0];
+    nextY = (y_coefs->m[0][0]*pow(t, 3)) +
+      y_coefs->m[1][0]*pow(t, 2) +
+      y_coefs->m[2][0]*t +
+      y_coefs->m[3][0];
+    add_edge(points, x, y, 0, nextX, nextY, 0);
+    x = nextX;
+    y = nextY;
+    t += step;
+  }
 }
 
 

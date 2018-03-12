@@ -172,21 +172,21 @@ void parse_file ( char * filename,
       fgets(line, sizeof(line), f);
       double cx, cy, cz, r;
       sscanf(line, "%lf %lf %lf %lf", &cx, &cy, &cz, &r);
-      add_circle(edges, cx, cy, cz, r, idk);
+      add_circle(edges, cx, cy, cz, r, 0.01);
     }
 
     else if (strncmp(line, "hermite", strlen(line)) == 0) {
       fgets(line, sizeof(line), f);
       double x0, y0, x1, y1, x2, y2, x3, y3;
       sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf", &x0, &y0, &x1, &y1, &x2, &y2, &x3, &y3);
-      add_curve(edges, x0, y0, x1, y1, x2, y2, x3, y3, idk, 0);
+      add_curve(edges, x0, y0, x1, y1, x2, y2, x3, y3, 0.01, HERMITE);
     }
 
     else if (strncmp(line, "bezier", strlen(line)) == 0) {
       fgets(line, sizeof(line), f);
       double x0, y0, x1, y1, x2, y2, x3, y3;
       sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf", &x0, &y0, &x1, &y1, &x2, &y2, &x3, &y3);
-      add_curve(edges, x0, y0, x1, y1, x2, y2, x3, y3, idk, 1);
+      add_curve(edges, x0, y0, x1, y1, x2, y2, x3, y3, 0.01, BEZIER);
     }
     
   }
